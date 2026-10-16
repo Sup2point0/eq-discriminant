@@ -23,3 +23,7 @@ macro_rules! eq_discr
 		eq_discriminant($prot, $deut) && eq_discr!($deut, $($rest)*)
 	};
 }
+
+
+#[cfg(test)]
+mod tests;
