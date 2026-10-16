@@ -1,15 +1,90 @@
+//! This crate provides 2 utilities for comparing enum variants: [`eq_discriminant`] and [`eq_discr!`].
+//! 
+//! Both of these are simply syntactic sugar for:
+//! 
+//! ```
+//! std::mem::discriminant(left) == std::mem::discriminant(right)
+//! ```
+//! 
+//! # Usage
+//! 
+//! ## [`eq_discriminant`]
+//! 
+//! ```
+//! use eq_discriminant::eq_discriminant;
+//! 
+//! enum Ex {
+//!    Left { data: usize },
+//!    Right { data: char },
+//! }
+//! 
+//! eq_discriminant(
+//!    Ex::Left { data: 0 },
+//!    Ex::Left { data: 1 },
+//! );  // -> true
+//! 
+//! eq_discriminant(
+//!    Ex::Left { data: 0 },
+//!    Ex::Right { data: 'c' },
+//! );  // -> false
+//! ```
+//! 
+//! ## [`eq_discr!`]
+//! 
+//! Use this if `eq_discriminant` is still too much text for you, or if you want to compare more than 2 values at once.
+//! 
+//! ```
+//! use eq_discriminant::eq_discr;
+//! 
+//! enum Ex {
+//!    Left { data: usize },
+//!    Right { data: char },
+//! }
+//! 
+//! eq_discr!(
+//!    Ex::Left { data: 0 },
+//!    Ex::Left { data: 1 },
+//!    Ex::Left { data: 2 },
+//! );  // -> true
+//! 
+//! eq_discr!(
+//!    Ex::Left { data: 0 },
+//!    Ex::Left { data: 1 },
+//!    Ex::Right { data: 'c' },
+//! );  // -> false
+//! ```
+
+
 /// Return `true` if and only if `left` and `right` are the same enum variant of `T`.
 /// 
-/// This function should only be called on `enum` types.
+/// This is syntax sugar for:
+/// 
+/// ```ignore
+/// std::mem::discriminant(left) == std::mem::discriminant(right)
+/// ```
+/// 
+/// So this is a simple wrapper around [`std::mem::discriminant`]. As such, it should only be called on `enum` types.
 #[must_use]
 pub fn eq_discriminant<T>(left: T, right: T) -> bool
 {
 	std::mem::discriminant(&left) == std::mem::discriminant(&right)
 }
 
+/// `eq_discr!<T>(first: T, second: T, third: T, ...)`
+/// 
 /// Return `true` if and only if all the provided arguments are the same enum variant of `T`.
 /// 
-/// This macro should only be applied to `enum` types.
+/// This is a syntax sugar wrapper around [`eq_discriminant`], so similarly should only be applied to `enum` types.
+/// 
+/// # Usage
+/// 
+/// ```rs
+/// enum Ex { Left, Right }
+/// 
+/// eq_discr!(Ex::Left, Ex::Left,  Ex::Left);   // true
+/// eq_discr!(Ex::Left, Ex::Left,  Ex::Right);  // false
+/// eq_discr!(Ex::Left, Ex::Right, Ex::Right);  // false
+/// ```
 #[macro_export]
 macro_rules! eq_discr
 {
