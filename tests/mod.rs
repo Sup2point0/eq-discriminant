@@ -1,6 +1,10 @@
 #![allow(unused)]
 
-use crate::*;
+use eq_discriminant::{
+	eq_discriminant,
+	neq_discriminant,
+	eq_discr,
+};
 
 
 macro_rules! assert_not
