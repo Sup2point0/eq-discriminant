@@ -1,11 +1,15 @@
 [package]
 name = "eq-discriminant"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 license = "MIT"
 
 description = "Enum comparison utilities"
 keywords = ["enum", "discriminant"]
 repository = "https://github.com/Sup2point0/eq-discriminant"
+
+exclude = [
+	"tests/",
+]
 
 [dependencies]
