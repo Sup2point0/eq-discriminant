@@ -113,11 +113,11 @@ macro_rules! eq_discr
 {
 	($prot:expr, $deut:expr) =>
 	{
-		eq_discriminant($prot, $deut)
+		$crate::eq_discriminant($prot, $deut)
 	};
 
 	($prot:expr, $deut:expr, $($rest:expr)*) =>
 	{
-		eq_discriminant($prot, $deut) && eq_discr!($deut, $($rest)*)
+		$crate::eq_discriminant($prot, $deut) && eq_discr!($deut, $($rest)*)
 	};
 }
