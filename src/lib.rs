@@ -1,10 +1,18 @@
-//! This crate provides 2 utilities for comparing enum variants: [`eq_discriminant`] and [`eq_discr!`].
+//! This crate provides utilities for comparing enum variants:
 //! 
-//! Both of these are simply syntactic sugar for:
+//! - [`eq_discriminant`]
+//! - [`neq_discriminant`]
+//! - [`eq_discr!`].
 //! 
-//! ```
-//! std::mem::discriminant(left) == std::mem::discriminant(right)
-//! ```
+//! # Why?
+//! 
+//! `std::mem::discriminant(left) == std::mem::discriminant(right)` is too much text for me, and places `left` and `right` too far apart.
+//! 
+//! `discriminant(left) == discriminant(right)` is better, but `discriminant` is still a far too long function name.
+//! 
+//! `eq_discriminant(left, right)` places them nicely side-by-side.
+//! 
+//! `eq_discr!(left, right)` is even terser!
 //! 
 //! # Usage
 //! 
@@ -68,6 +76,21 @@
 pub fn eq_discriminant<T>(left: T, right: T) -> bool
 {
 	std::mem::discriminant(&left) == std::mem::discriminant(&right)
+}
+
+/// Return `true` if and only if `left` and `right` are different enum variants of `T`.
+/// 
+/// This is syntax sugar for:
+/// 
+/// ```ignore
+/// std::mem::discriminant(left) != std::mem::discriminant(right)
+/// ```
+/// 
+/// So this is a simple wrapper around [`std::mem::discriminant`]. As such, it should only be called on `enum` types.
+#[must_use]
+pub fn neq_discriminant<T>(left: T, right: T) -> bool
+{
+	std::mem::discriminant(&left) != std::mem::discriminant(&right)
 }
 
 /// `eq_discr!<T>(first: T, second: T, third: T, ...)`
