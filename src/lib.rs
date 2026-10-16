@@ -6,13 +6,13 @@
 //! 
 //! # Why?
 //! 
-//! `std::mem::discriminant(left) == std::mem::discriminant(right)` is too much text for me, and places `left` and `right` too far apart.
+//! `std::mem::discriminant(&left) == std::mem::discriminant(&right)` is too much text for me, and places `left` and `right` too far apart.
 //! 
-//! `discriminant(left) == discriminant(right)` is better, but `discriminant` is still a far too long function name.
+//! `discriminant(&left) == discriminant(&right)` is better, but `discriminant` is still a far too long function name.
 //! 
-//! `eq_discriminant(left, right)` places them nicely side-by-side.
+//! `eq_discriminant(&left, &right)` places them nicely side-by-side.
 //! 
-//! `eq_discr!(left, right)` is even terser!
+//! `eq_discr!(&left, &right)` is even terser!
 //! 
 //! # Usage
 //! 
@@ -27,13 +27,13 @@
 //! }
 //! 
 //! eq_discriminant(
-//!    Ex::Left { data: 0 },
-//!    Ex::Left { data: 1 },
+//!    &Ex::Left { data: 0 },
+//!    &Ex::Left { data: 1 },
 //! );  // -> true
 //! 
 //! eq_discriminant(
-//!    Ex::Left { data: 0 },
-//!    Ex::Right { data: 'c' },
+//!    &Ex::Left { data: 0 },
+//!    &Ex::Right { data: 'c' },
 //! );  // -> false
 //! ```
 //! 
@@ -50,15 +50,15 @@
 //! }
 //! 
 //! eq_discr!(
-//!    Ex::Left { data: 0 },
-//!    Ex::Left { data: 1 },
-//!    Ex::Left { data: 2 },
+//!    &Ex::Left { data: 0 },
+//!    &Ex::Left { data: 1 },
+//!    &Ex::Left { data: 2 },
 //! );  // -> true
 //! 
 //! eq_discr!(
-//!    Ex::Left { data: 0 },
-//!    Ex::Left { data: 1 },
-//!    Ex::Right { data: 'c' },
+//!    &Ex::Left { data: 0 },
+//!    &Ex::Left { data: 1 },
+//!    &Ex::Right { data: 'c' },
 //! );  // -> false
 //! ```
 
@@ -68,14 +68,15 @@
 /// This is syntax sugar for:
 /// 
 /// ```ignore
-/// std::mem::discriminant(left) == std::mem::discriminant(right)
+/// std::mem::discriminant(&left) == std::mem::discriminant(&right)
 /// ```
 /// 
 /// So this is a simple wrapper around [`std::mem::discriminant`]. As such, it should only be called on `enum` types.
 #[must_use]
-pub fn eq_discriminant<T>(left: T, right: T) -> bool
+pub fn eq_discriminant<T>(left: &T, right: &T) -> bool
 {
-	std::mem::discriminant(&left) == std::mem::discriminant(&right)
+		std::mem::discriminant(left)
+	== std::mem::discriminant(right)
 }
 
 /// Return `true` if and only if `left` and `right` are different enum variants of `T`.
@@ -83,14 +84,14 @@ pub fn eq_discriminant<T>(left: T, right: T) -> bool
 /// This is syntax sugar for:
 /// 
 /// ```ignore
-/// std::mem::discriminant(left) != std::mem::discriminant(right)
+/// std::mem::discriminant(&left) != std::mem::discriminant(&right)
 /// ```
 /// 
 /// So this is a simple wrapper around [`std::mem::discriminant`]. As such, it should only be called on `enum` types.
 #[must_use]
-pub fn neq_discriminant<T>(left: T, right: T) -> bool
+pub fn neq_discriminant<T>(left: &T, right: &T) -> bool
 {
-	std::mem::discriminant(&left) != std::mem::discriminant(&right)
+	std::mem::discriminant(left) != std::mem::discriminant(right)
 }
 
 /// `eq_discr!<T>(first: T, second: T, third: T, ...)`
